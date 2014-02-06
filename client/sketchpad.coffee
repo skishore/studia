@@ -21,19 +21,28 @@ class Sketchpad
   set_cursor: (e) =>
     @cursor = {x: e.pageX - @offset.left, y: e.pageY - @offset.top}
 
+  draw_segment: (start, end) =>
+    do @context.beginPath
+    @context.moveTo start.x, start.y
+    @context.lineTo end.x, end.y
+    do @context.stroke
+
   mousedown: (e) =>
     @set_cursor e
-    if not mouse_down
-      do @context.beginPath
-      @context.moveTo @cursor.x, @cursor.y
+    #if not mouse_down
+    #  do @context.beginPath
+    #  @context.moveTo @cursor.x, @cursor.y
 
-   mousemove: (e) =>
+  mousemove: (e) =>
+    last_cursor = @cursor
     @set_cursor e
     if mouse_down
-      @context.lineTo @cursor.x, @cursor.y
-      do @context.stroke
+      Meteor.call 'insert_segment', last_cursor, @cursor
+      #@context.lineTo @cursor.x, @cursor.y
+      #do @context.stroke
 
 
+Session.set 'sketchpad_loaded', false
 sketchpad = null
 
 
@@ -47,3 +56,14 @@ Template.sketchpad.events
 
 Template.sketchpad.rendered = ->
   sketchpad = new Sketchpad $ @find '.sketchpad'
+  Session.set 'sketchpad_loaded', true
+
+
+Meteor.startup ->
+  Meteor.subscribe 'segments'
+
+  Deps.autorun ->
+    if Session.get 'sketchpad_loaded'
+      Segments.find().observe
+        'added': (segment) ->
+          sketchpad?.draw_segment segment.start, segment.end
