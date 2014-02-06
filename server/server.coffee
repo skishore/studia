@@ -4,3 +4,6 @@ Meteor.publish 'segments', ->
 Meteor.methods
   'insert_segment': (start, end) ->
     Segments.insert_segment start, end
+
+  'clear_segments': ->
+    Segments.remove {}

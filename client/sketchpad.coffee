@@ -5,12 +5,12 @@ class Sketchpad
     elt.height container.height()
     @context = elt[0].getContext '2d'
     @offset = @elt.offset()
-    @initialize_context elt
+    do @reset_context
 
-  initialize_context: (elt) =>
+  reset_context: =>
     # Set the context's internal width and height based on the canvas.
-    @context.canvas.height = elt.height()
-    @context.canvas.width = elt.width()
+    @context.canvas.height = @elt.height()
+    @context.canvas.width = @elt.width()
     # Set the line style. For some reason, modifying @context.canvas after
     # making these changes clears them... wtf.js
     @context.lineCap = 'round'
@@ -70,3 +70,7 @@ Meteor.startup ->
       Segments.find().observe
         'added': (segment) ->
           sketchpad?.draw_segment segment.start, segment.end
+        'removed': (old_segment) ->
+          do sketchpad?.reset_context
+
+  $('.clear-button').click -> Meteor.call 'clear_segments'

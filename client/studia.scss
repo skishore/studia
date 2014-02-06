@@ -1,6 +1,15 @@
+body {
+  text-align: center;
+}
+
 .sketchpad-container {
   border: 1px dotted #888;
   height: 400px;
   margin: 0px auto;
   width: 400px;
+}
+
+.clear-button {
+  display: block;
+  margin: 4px;
 }
