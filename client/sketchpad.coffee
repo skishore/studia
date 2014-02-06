@@ -5,23 +5,26 @@ class Sketchpad
     elt.height container.height()
     @context = elt[0].getContext '2d'
     @offset = @elt.offset()
-    do @reset_context
+    @reset_context true
 
-  reset_context: =>
-    # Set the context's internal width and height based on the canvas.
-    @context.canvas.height = @elt.height()
-    @context.canvas.width = @elt.width()
-    # Set the line style. For some reason, modifying @context.canvas after
-    # making these changes clears them... wtf.js
-    @context.lineCap = 'round'
-    @context.lineJoin = 'round'
-    @context.lineWidth = 4
-    @context.strokeStyle = 'red'
+  reset_context: (force) =>
+    if @changed or force
+      # Set the context's internal width and height based on the canvas.
+      @context.canvas.height = @elt.height()
+      @context.canvas.width = @elt.width()
+      # Set the line style. For some reason, modifying @context.canvas after
+      # making these changes clears them... wtf.js
+      @context.lineCap = 'round'
+      @context.lineJoin = 'round'
+      @context.lineWidth = 4
+      @context.strokeStyle = 'red'
+      @changed = false
 
   set_cursor: (e) =>
     @cursor = {x: e.pageX - @offset.left, y: e.pageY - @offset.top}
 
   draw_segment: (start, end) =>
+    @changed = true
     continuation = (start.x == @last_end?.x and start.y == @last_end?.y)
     if not continuation
       do @context.beginPath
