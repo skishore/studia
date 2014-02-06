@@ -76,4 +76,6 @@ Meteor.startup ->
         'removed': (old_segment) ->
           do sketchpad?.reset_context
 
-  $('.clear-button').click -> Meteor.call 'clear_segments'
+  $('.clear-button')[0].onclick = ->
+    Meteor.call 'clear_segments'
+    return
