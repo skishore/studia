@@ -22,10 +22,13 @@ class Sketchpad
     @cursor = {x: e.pageX - @offset.left, y: e.pageY - @offset.top}
 
   draw_segment: (start, end) =>
-    do @context.beginPath
+    continuation = (start.x == @last_end?.x and start.y == @last_end?.y)
+    if not continuation
+      do @context.beginPath
     @context.moveTo start.x, start.y
     @context.lineTo end.x, end.y
     do @context.stroke
+    @last_end = end
 
   mousedown: (e) =>
     @set_cursor e
