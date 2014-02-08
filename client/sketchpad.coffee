@@ -42,7 +42,7 @@ class Sketchpad
   mousemove: (e) =>
     last_cursor = @cursor
     @set_cursor e
-    if mouse_down
+    if mouse_down or touch_enabled
       Meteor.call 'insert_segment', last_cursor, @cursor
       #@context.lineTo @cursor.x, @cursor.y
       #do @context.stroke
@@ -53,11 +53,21 @@ sketchpad = null
 
 
 Template.sketchpad.events
+  'touchstart .sketchpad': (e) ->
+    if touch_enabled
+      sketchpad?.mousedown e
+
+  'touchmove .sketchpad': (e) ->
+    if touch_enabled
+      sketchpad?.mousemove e
+
   'mousedown .sketchpad': (e) ->
-    sketchpad?.mousedown e
+    if not touch_enabled
+      sketchpad?.mousedown e
 
   'mousemove .sketchpad': (e) ->
-    sketchpad?.mousemove e
+    if not touch_enabled
+      sketchpad?.mousemove e
 
 
 Template.sketchpad.rendered = ->

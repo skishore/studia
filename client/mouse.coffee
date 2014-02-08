@@ -12,3 +12,18 @@ document.onmousedown = ->
 document.onmouseup = ->
   window.mouse_down = false
   return
+
+
+device = ->
+  device_regex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i
+  device_regex.test navigator.userAgent.toLowerCase()
+
+
+Meteor.startup ->
+  window.touch_enabled = do device
+
+  if window.touch_enabled
+    document.body.addEventListener 'touchmove', ((e) ->
+      do e.preventDefault
+      false
+    ), false
