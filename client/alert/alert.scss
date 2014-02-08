@@ -1,0 +1,14 @@
+.custom-alert-container {
+  padding-top: 12px;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: 100%;
+
+  .custom-alert {
+    background-color: #FCC;
+    border: 1px solid black;
+    opacity: 0.5;
+    padding: 2px 6px;
+  }
+}
