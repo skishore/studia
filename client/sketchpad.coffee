@@ -1,44 +1,16 @@
-class Sketchpad
+class Sketchpad extends Canvas
   constructor: (@elt) ->
-    container = elt.parent()
-    elt.width container.width()
-    elt.height container.height()
-    @context = elt[0].getContext '2d'
+    super @elt
     @offset = @elt.offset()
-    @reset_context true
 
-  reset_context: (force) =>
-    if @changed or force
-      # Set the context's internal width and height based on the canvas.
-      @context.canvas.height = @elt.height()
-      @context.canvas.width = @elt.width()
-      # Set the line style. For some reason, modifying @context.canvas after
-      # making these changes clears them... wtf.js
-      @context.lineCap = 'round'
-      @context.lineJoin = 'round'
-      @context.lineWidth = 4
-      @context.strokeStyle = 'red'
-      @changed = false
-
-  set_cursor: (e) =>
-    @cursor = {x: e.pageX - @offset.left, y: e.pageY - @offset.top}
-
-  draw_segment: (start, end) =>
-    @changed = true
-    continuation = (start.x == @last_end?.x and start.y == @last_end?.y)
-    if not continuation
-      do @context.beginPath
-    @context.moveTo start.x, start.y
-    @context.lineTo end.x, end.y
-    do @context.stroke
-    @last_end = end
+  get_cursor: (e) =>
+    {x: e.pageX - @offset.left, y: e.pageY - @offset.top}
 
   mousedown: (e) =>
-    @set_cursor e
+    @cursor = @get_cursor e
 
   mousemove: (e) =>
-    last_cursor = @cursor
-    @set_cursor e
+    [last_cursor, @cursor] = [@cursor, @get_cursor e]
     if Mouse.mouse_down or Mouse.touch_enabled
       Meteor.call 'insert_segment', last_cursor, @cursor
 
@@ -79,9 +51,9 @@ Meteor.startup ->
     if Session.get 'sketchpad_loaded'
       Segments.find().observe
         'added': (segment) ->
-          sketchpad?.draw_segment segment.start, segment.end
+          sketchpad?.draw_line segment.start, segment.end
         'removed': (old_segment) ->
-          do sketchpad?.reset_context
+          do sketchpad?.clear
 
   $('.clear-button')[0].onclick = ->
     Meteor.call 'clear_segments'
