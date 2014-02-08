@@ -20,25 +20,28 @@ sketchpad = null
 
 
 Template.sketchpad.events
-  'touchstart .sketchpad': (e) ->
-    if Mouse.touch_enabled
+  'click .clear-link': (e) ->
+    Meteor.call 'clear_segments'
+
+  'mousedown canvas': (e) ->
+    if not Mouse.touch_enabled
       sketchpad?.mousedown e
 
-  'touchmove .sketchpad': (e) ->
-    if Mouse.touch_enabled
+  'mousemove canvas': (e) ->
+    if not Mouse.touch_enabled
       sketchpad?.mousemove e
 
-  'mousedown .sketchpad': (e) ->
-    if not Mouse.touch_enabled
+  'touchstart canvas': (e) ->
+    if Mouse.touch_enabled
       sketchpad?.mousedown e
 
-  'mousemove .sketchpad': (e) ->
-    if not Mouse.touch_enabled
+  'touchmove canvas': (e) ->
+    if Mouse.touch_enabled
       sketchpad?.mousemove e
 
 
 Template.sketchpad.rendered = ->
-  sketchpad = new Sketchpad $ @find '.sketchpad'
+  sketchpad = new Sketchpad $ @find 'canvas'
   Session.set 'sketchpad_loaded', true
 
 
@@ -54,7 +57,3 @@ Meteor.startup ->
           sketchpad?.draw_line segment.start, segment.end
         'removed': (old_segment) ->
           do sketchpad?.clear
-
-  $('.clear-button')[0].onclick = ->
-    Meteor.call 'clear_segments'
-    return

@@ -2,14 +2,26 @@ body {
   text-align: center;
 }
 
-.sketchpad-container {
-  border: 1px dotted #888;
-  height: 400px;
-  margin: 0px auto;
-  width: 400px;
+.sketchpad-template {
+  .canvas-container {
+    border: 1px dotted #888;
+    height: 400px;
+    margin: 0px auto;
+    width: 400px;
+  }
+
+  .clear-button {
+    display: block;
+    margin: 4px;
+  }
 }
 
-.clear-button {
-  display: block;
-  margin: 4px;
+.uploader-template {
+  form {
+    padding-top: 4px;
+
+    input[type="file"] {
+      width: 180px;
+    }
+  }
 }

@@ -3,12 +3,28 @@
 </head>
 
 <body>
-  {{> sketchpad}}
-  <a class="clear-button" href="#">Reset</a>
+  {{#if true}}
+    {{> sketchpad}}
+  {{else}}
+    {{> uploader}}
+  {{/if}}
 </body>
 
 <template name="sketchpad">
-  <div class="sketchpad-container">
-    <canvas class="sketchpad"></canvas>
+  <div class="sketchpad-template">
+    <div class="canvas-container">
+      <canvas></canvas>
+    </div>
+    <a class="clear-link" href="#">Reset</a>
+  </div>
+</template>
+
+<template name="uploader">
+  <div class="uploader-template">
+    <div>Upload a PDF, then share the URL with friends!</div>
+    <form enctype="multipart/form-data" action="/upload" method="post" target="trick-iframe">
+      <input type="file" name="pdf">
+      <button type="submit">Upload PDF</button>
+    </form>
   </div>
 </template>
