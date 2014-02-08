@@ -3,7 +3,7 @@
 </head>
 
 <body>
-  {{#if true}}
+  {{#if false}}
     {{> sketchpad}}
   {{else}}
     {{> uploader}}
@@ -22,9 +22,9 @@
 <template name="uploader">
   <div class="uploader-template">
     <div>Upload a PDF, then share the URL with friends!</div>
-    <form enctype="multipart/form-data" action="/upload" method="post" target="trick-iframe">
+    <div class="form-container">
       <input type="file" name="pdf">
-      <button type="submit">Upload PDF</button>
-    </form>
+      <button class="upload-button">Upload PDF</button>
+    </div>
   </div>
 </template>
