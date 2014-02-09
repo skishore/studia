@@ -140,6 +140,19 @@ body {
             background-image: -webkit-linear-gradient(top, #4888F8, #4080F0);
             border-color: #04A;
           }
+
+          &.trick-file {
+            overflow: hidden;
+            position: absolute;
+
+            input[type="file"] {
+              cursor: pointer;
+              right: 0px;
+              opacity: 0;
+              position: absolute;
+              top: 0px;
+            }
+          }
         }
 
         input[type="text"] {
