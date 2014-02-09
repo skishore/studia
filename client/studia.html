@@ -24,13 +24,13 @@
     <div class="title">Studia</div>
     <div class="subtitle">collaborative PDF annotation</div>
     <div class="steps">
-      <div class="step-label">1. Upload a PDF</div>
+      <div class="step-label">Upload a PDF:</div>
       <div class="upload-options">
         <div class="upload-option">
           <div class="option-label">From your computer:</div>
-          <a class="upload-link trick-file">
+          <a class="upload-link local-file">
             Choose file
-            <input type="file" name="pdf">
+            <input type="file" name="file">
           </a>
         </div>
         <div class="upload-option">
@@ -38,14 +38,16 @@
         </div>
         <div class="upload-option last">
           <div class="option-label">From the Internet:</div>
-          <input type="text" placeholder="Enter URL">
-          <a class="upload-link">Go</a>
+          <input type="text" name="url" placeholder="Enter URL">
+          <a class="upload-link remote-file">Go</a>
         </div>
       </div>
+      <!--
       <div class="spacer"></div>
       <div class="line"></div>
       <div class="spacer"></div>
       <div class="step-label">2. Share the link!</div>
+      -->
     </div>
   </div>
 </template>

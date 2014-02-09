@@ -1,19 +1,26 @@
-upload = (button, file) ->
+upload = (file) ->
   if not file
-    console.log 'Choose a file to upload!'
-  do button.disable
+    return alert 'Choose a file to upload!'
   reader = new FileReader
-  reader.onload = (e) -> finish_upload button, e
+  reader.onload = finish_upload
   reader.readAsBinaryString file
 
 
-finish_upload = (button, e) ->
+finish_upload = (e) ->
   result = e.target.result
-  alert 'Uploading ' + result.length + ' byte PDF..'
-  do button.enable
+  alert 'Uploaded ' + result.length + ' byte PDF.'
+
+
+upload_url = (url) =>
+  if not url
+    return alert 'Enter a URL to upload!'
+  console.log url
 
 
 Template.uploader.events
-  'click .upload-button': (e) =>
-    file_input = $(e.target).parent().find 'input[name="pdf"]'
-    upload $(e.target), file_input[0]?.files[0]
+  'change input[name="file"]': (e) ->
+    upload e.currentTarget.files[0]
+
+  'click .remote-file': (e) =>
+    url_input = $(e.currentTarget).parent().find 'input[name="url"]'
+    upload_url do $(url_input).val
