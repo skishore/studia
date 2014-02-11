@@ -1,7 +1,7 @@
 class @Segments extends Collection
   @set_schema
     name: 'segments'
-    durable: false
+    durable: Common.durable
     fields: [
       'start',
       'end',

@@ -10,15 +10,14 @@ find_directory = (directory) ->
 
 
 class @FileUpload
-  @tolerance = 1000000
   @directory = (find_directory '.uploads') or (find_directory 'client/app/uploads')
   assert fs.existsSync path.join @directory, 'sentinel'
 
-  @generate_uuid_: (length) =>
+  @generate_uuid_: (length) ->
     length = Math.max length, 1
-    min_length = "#{@tolerance*length}".length - 1
+    min_length = "#{Common.tolerance*length}".length - 1
     while true
-      uuid = Math.floor @tolerance*length*Math.random()
+      uuid = Math.floor Common.tolerance*length*Math.random()
       if "#{uuid}".length >= min_length
         return uuid
 
@@ -49,8 +48,8 @@ class @FileUpload
     uuid_path = @get_uuid_path uuid
     fs.readFileSync uuid_path, encoding: 'binary'
 
-  @write_file: (contents) =>
+  @write_file: (data) =>
     uuid = do @generate_uuid
     uuid_path = @get_uuid_path uuid
-    fs.writeFileSync uuid_path, contents, encoding: 'binary'
+    fs.writeFileSync uuid_path, data, encoding: 'binary'
     uuid

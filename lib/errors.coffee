@@ -1,5 +1,5 @@
 # Error pseudo-classes. Usage:
-#   throw ValueError 'square_root() was called with a negative number.'
+#   throw new ValueError 'square_root() was called with a negative number.'
 
 stack = ->
   # Strip out the first four lines, which are tracebacks from the

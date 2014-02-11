@@ -38,20 +38,24 @@ class Uploader
 
   finish_file_read: (e) =>
     result = e.target.result
+    if result.length > Common.max_size
+      return @stall_progress null,
+        "File was too large (maximum size: #{Common.max_size >> 20} MB)"
     @update_progress 0.50, "Sending #{result.length} bytes to server..."
-    Meteor.call 'write_file', result, @finish_file_send
-
-  finish_file_send: (err, result) =>
-    if err
-      return @stall_progress err, 'There was a server-side upload error.'
-    @update_progress 0.75, 'Validating PDF...'
-    console.log result
+    Meteor.call 'write_file', result, @validate_upload
 
   upload_url: (url) =>
     if not url
       return alert 'Enter a URL to upload!'
     @show_progress @parse_url(url), 400
-    @update_progress 0.33, 'Streaming remote file...'
+    @update_progress 0.25, 'Streaming remote file to server...'
+    Meteor.call 'save_url', url, @validate_upload
+
+  validate_upload: (err, result) =>
+    if err
+      return @stall_progress err, 'There was a server-side upload error.'
+    @update_progress 0.75, 'Validating PDF...'
+    console.log result
 
 
 uploader = null
