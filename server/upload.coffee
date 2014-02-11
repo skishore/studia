@@ -1,10 +1,17 @@
-class @Upload
-  # The fraction of available UUIDs that can be taken.
-  @tolerance = 1000000
+fs = Npm.require 'fs'
+path = Npm.require 'path'
 
-  @directory = '../../../../../.uploads'
-  @fs = Npm.require 'fs'
-  @path = Npm.require 'path'
+
+find_directory = (directory) ->
+  for i in [0...10]
+    if fs.existsSync directory
+      return directory
+    directory = path.join '..', directory
+
+
+class @Upload
+  @tolerance = 1000000
+  @directory = find_directory '.uploads'
 
   @generate_uuid_: (length) =>
     length = Math.max length, 1
@@ -38,4 +45,5 @@ class @Upload
     @path.join @directory, "#{uuid}.pdf"
 
 
-console.log do Upload.generate_uuid
+#console.log do Upload.generate_uuid
+console.log Upload.directory
