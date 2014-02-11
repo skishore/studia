@@ -18,13 +18,17 @@ class @Upload
     contents = @fs.readdirSync @directory
     uuid_set = {}
     for filename in contents
-      uuid_set[@get_uuid_for_filename filename] = true
+      uuid = @get_uuid_for_filename filename
+      if uuid
+        uuid_set[uuid] = true
     while true
       uuid = @generate_uuid_ contents.length
       if uuid not of uuid_set
         return uuid
 
   @get_uuid_for_filename: (filename) =>
+    if filename[0] == '.'
+      return
     tokens = filename.split '.'
     assert tokens.length == 2 and tokens.pop() == 'pdf',
       "Unexpected filename: #{filename}"
