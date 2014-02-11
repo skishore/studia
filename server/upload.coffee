@@ -11,8 +11,8 @@ find_directory = (directory) ->
 
 class @Upload
   @tolerance = 1000000
-  @directory = find_directory '.uploads'
-  assert fs.existsSync path.join @directory, '.sentinel'
+  @directory = (find_directory '.uploads') or (find_directory 'client/app/uploads')
+  assert fs.existsSync path.join @directory, 'sentinel'
 
   @generate_uuid_: (length) =>
     length = Math.max length, 1
@@ -23,7 +23,7 @@ class @Upload
         return uuid
 
   @generate_uuid: =>
-    contents = @fs.readdirSync @directory
+    contents = fs.readdirSync @directory
     uuid_set = {}
     for filename in contents
       uuid = @get_uuid_for_filename filename
@@ -35,12 +35,9 @@ class @Upload
         return uuid
 
   @get_uuid_for_filename: (filename) =>
-    if filename[0] == '.'
+    if filename in ['.gitignore', 'sentinel']
       return
     tokens = filename.split '.'
     assert tokens.length == 2 and tokens.pop() == 'pdf',
       "Unexpected filename: #{filename}"
     tokens[0]
-
-  @get_path_for_uuid: (uuid) =>
-    @path.join @directory, "#{uuid}.pdf"
