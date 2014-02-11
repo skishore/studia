@@ -12,6 +12,7 @@ find_directory = (directory) ->
 class @Upload
   @tolerance = 1000000
   @directory = find_directory '.uploads'
+  assert fs.existsSync path.join @directory, '.sentinel'
 
   @generate_uuid_: (length) =>
     length = Math.max length, 1
@@ -43,7 +44,3 @@ class @Upload
 
   @get_path_for_uuid: (uuid) =>
     @path.join @directory, "#{uuid}.pdf"
-
-
-#console.log do Upload.generate_uuid
-console.log Upload.directory
