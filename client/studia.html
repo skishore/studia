@@ -42,12 +42,21 @@
           <a class="upload-link remote-file">Go</a>
         </div>
       </div>
-      <!--
-      <div class="spacer"></div>
-      <div class="line"></div>
-      <div class="spacer"></div>
-      <div class="step-label">2. Share the link!</div>
-      -->
+      {{> upload-progress}}
     </div>
+  </div>
+</template>
+
+<template name="upload-progress">
+  <div class="upload-progress-template">
+    <div class="line"></div>
+    <div class="spacer"></div>
+    <div class="header step-label"></div>
+    <div class="progress-bar-container">
+      <div class="progress-bar">
+        <div class="progress-bar-overlay"></div>
+      </div>
+    </div>
+    <div class="status"></div>
   </div>
 </template>
