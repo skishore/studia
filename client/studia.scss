@@ -204,12 +204,24 @@ body {
           opacity: 0.25;
           width: 100%;
         }
+
+        &.error {
+          background-color: #D33;
+
+          .progress-bar-overlay {
+            opacity: 0;
+          }
+        }
       }
     }
 
     .status {
       color: $light-text;
       margin: $step-margin 0px $step-margin + 1px;
+
+      &.error {
+        color: #D33;
+      }
     }
   }
 }

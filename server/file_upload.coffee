@@ -9,7 +9,7 @@ find_directory = (directory) ->
     directory = path.join '..', directory
 
 
-class @Upload
+class @FileUpload
   @tolerance = 1000000
   @directory = (find_directory '.uploads') or (find_directory 'client/app/uploads')
   assert fs.existsSync path.join @directory, 'sentinel'
@@ -41,3 +41,16 @@ class @Upload
     assert tokens.length == 2 and tokens.pop() == 'pdf',
       "Unexpected filename: #{filename}"
     tokens[0]
+
+  @get_uuid_path: (uuid) =>
+    filepath = path.join @directory, "#{uuid}.pdf"
+
+  @read_file: (uuid) =>
+    uuid_path = @get_uuid_path uuid
+    fs.readFileSync uuid_path, encoding: 'binary'
+
+  @write_file: (contents) =>
+    uuid = do @generate_uuid
+    uuid_path = @get_uuid_path uuid
+    fs.writeFileSync uuid_path, contents, encoding: 'binary'
+    uuid
