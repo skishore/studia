@@ -47,7 +47,7 @@ class Uploader
         "File was too large (maximum size: #{Common.max_size >> 20} MB)"
     @update_progress 0.50, "Sending #{result.length} bytes to server..."
     Meteor.call 'save_file', result, (err, result) =>
-      @validate_upload err, result, 0.75
+      @finish_upload err, result, 0.75
 
   upload_url: (url) =>
     if not url
@@ -55,13 +55,29 @@ class Uploader
     @show_progress @parse_url(url), 400
     @update_progress 0.33, 'Streaming remote file to server...'
     Meteor.call 'save_url', url, (err, result) =>
-      @validate_upload err, result, 0.67
+      @finish_upload err, result, 0.67
 
-  validate_upload: (err, result, progress) =>
+  finish_upload: (err, result, progress) =>
     if err
       return @stall_progress 'There was a server-side upload error:', err, true
-    @update_progress progress, 'Validating PDF...'
-    console.log result
+    @update_progress progress, 'Validating uploaded PDF...'
+    uuid = result
+    Meteor.call 'get_file', uuid, (err, result) =>
+      @validate_pdf err, result, uuid
+
+  validate_pdf: (err, result, uuid) =>
+    if err
+      return @stall_progress 'There was a server-side retrieval error:', err, true
+    console.log result.length
+    PDFJS.getDocument('asdf').then((pdf) =>
+      console.log 'here'
+      window.pdf = pdf
+      link = "#{window.location.origin}/#{uuid}"
+      @update_progress 1.0, "Done! Got shareable link: #{link}"
+    ).catch((err) =>
+      console.log err
+      @stall_progress 'The PDF was malformed!'
+    )
 
 
 uploader = null
