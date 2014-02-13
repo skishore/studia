@@ -204,24 +204,44 @@ body {
           opacity: 0.25;
           width: 100%;
         }
-
-        &.error {
-          background-color: #D33;
-
-          .progress-bar-overlay {
-            opacity: 0;
-          }
-        }
       }
     }
 
     .status {
       color: $light-text;
       margin: $step-margin 0px $step-margin + 1px;
+
+      a {
+        color: #26D;
+
+        &:hover {
+          color: #48F;
+        }
+      }
     }
 
-    .error.status, .error.details {
-      color: #D33;
+    &.error {
+      .progress-bar {
+        background-color: #D33;
+
+        .progress-bar-overlay {
+          opacity: 0;
+        }
+      }
+
+      .status, .details {
+        color: #D33;
+      }
+    }
+
+    &.success {
+      .progress-bar-container {
+        display: none;
+      }
+
+      .status {
+        margin: $step-margin + 8px 0px $step-margin + 1px;
+      }
     }
   }
 }

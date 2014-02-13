@@ -7,25 +7,32 @@ class Uploader
 
   show_progress: (path, delay) ->
     do @progress.hide
-    @progress.find('.progress-bar, .status').removeClass 'error'
+    @progress.removeClass 'error success'
     @progress.find('.header').text "Uploading #{path}..."
     @progress.find('.progress-bar').width '0%'
-    @progress.find('.status').text 'Starting upload...'
+    @progress.find('.status').html 'Starting upload...'
     @progress.find('.error.details').text ''
     @progress.slideDown delay
 
   update_progress: (progress, status) =>
-    @progress.find('.progress-bar').animate
-      width: "#{Math.floor 100*progress}%", 400
-    @progress.find('.status').text status
+    @progress.find('.progress-bar').stop(false, true).animate
+      width: "#{Math.floor 100*progress}%", 400, 'swing', =>
+        @progress.find('.status').text status
 
   stall_progress: (message, err, show_error_details) =>
-    @progress.find('.progress-bar, .status').addClass 'error'
+    @progress.addClass 'error'
+    @progress.find('.progress-bar').stop false, true
     @progress.find('.status').text message
     if err
       console.log err
       if show_error_details
         @progress.find('.error.details').text err.error
+
+  finish_progress: (status) =>
+    @progress.stop().addClass 'success'
+    @progress.find('.progress-bar').stop false, true
+    @progress.find('.status').html status
+    do @progress.height('').slideDown
 
   upload_file: (file) =>
     if not file
@@ -68,12 +75,11 @@ class Uploader
   validate_pdf: (err, result, uuid) =>
     if err
       return @stall_progress 'There was a server-side retrieval error:', err, true
-    console.log result.length
-    PDFJS.getDocument('asdf').then((pdf) =>
-      console.log 'here'
-      window.pdf = pdf
+    buffer = Common.base64_decode result
+    PDFJS.getDocument(buffer).then((pdf) =>
       link = "#{window.location.origin}/#{uuid}"
-      @update_progress 1.0, "Done! Got shareable link: #{link}"
+      @finish_progress "Done! Got link: <a href=\"#{link}\">#{link}</a>"
+      window.pdf = pdf
     ).catch((err) =>
       console.log err
       @stall_progress 'The PDF was malformed!'
