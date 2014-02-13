@@ -9,7 +9,7 @@ find_directory = (directory) ->
     directory = path.join '..', directory
 
 
-class @FileUpload
+class @FSFileStore
   @directory = (find_directory '.uploads') or (find_directory 'client/app/uploads')
   assert fs.existsSync path.join @directory, 'sentinel'
 
@@ -44,11 +44,11 @@ class @FileUpload
   @get_uuid_path: (uuid) =>
     filepath = path.join @directory, "#{uuid}.pdf"
 
-  @read_file: (uuid) =>
+  @get_file: (uuid) =>
     uuid_path = @get_uuid_path uuid
     fs.readFileSync uuid_path, encoding: 'binary'
 
-  @write_file: (data) =>
+  @save_file: (data) =>
     uuid = do @generate_uuid
     uuid_path = @get_uuid_path uuid
     fs.writeFileSync uuid_path, data, encoding: 'binary'

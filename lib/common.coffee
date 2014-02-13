@@ -18,3 +18,5 @@ class @Common
   @max_size = 0x1000000
   # The reciprocal of the fraction of possible UUIDs that are valid.
   @tolerance = 1000000
+
+  @MIME_type = 'application/pdf'

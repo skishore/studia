@@ -1,4 +1,4 @@
-class @FileStore extends Collection
+class @MongoFileStore extends Collection
   @set_schema
     name: 'file_store'
     durable: Common.durable
@@ -25,14 +25,14 @@ class @FileStore extends Collection
       if not @findOne(uuid: uuid)
         return uuid
 
-  @read_file: (uuid) =>
+  @get_file: (uuid) =>
     check uuid, Number
     result = @findOne uuid: uuid
     if not result
       throw new ValueError "Missing file: #{uuid}"
     result.data
 
-  @write_file: (data) =>
+  @save_file: (data) =>
     check data, String
     uuid = do @generate_uuid
     @insert {uuid: uuid, data: data}

@@ -8,9 +8,11 @@ stack = ->
   stack_lines.splice(3).join '\n'
 
 register_error = (type) ->
-  @[type] = class CustomError extends Error
+  @[type] = class CustomError extends Meteor.Error
     constructor: (message) ->
-      @stack = "#{type}: #{message}\n#{stack()}"
+      @error = message
+      @details = "#{type}: #{message}\n#{stack()}"
+      console.error @details
 
 register_error 'AssertionError'
 register_error 'NotImplementedError'

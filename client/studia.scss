@@ -218,10 +218,10 @@ body {
     .status {
       color: $light-text;
       margin: $step-margin 0px $step-margin + 1px;
+    }
 
-      &.error {
-        color: #D33;
-      }
+    .error.status, .error.details {
+      color: #D33;
     }
   }
 }

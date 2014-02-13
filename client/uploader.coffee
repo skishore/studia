@@ -11,50 +11,56 @@ class Uploader
     @progress.find('.header').text "Uploading #{path}..."
     @progress.find('.progress-bar').width '0%'
     @progress.find('.status').text 'Starting upload...'
+    @progress.find('.error.details').text ''
     @progress.slideDown delay
 
   update_progress: (progress, status) =>
-    if progress != 1
-      progress += 0.1*Math.random()
     @progress.find('.progress-bar').animate
       width: "#{Math.floor 100*progress}%", 400
     @progress.find('.status').text status
 
-  stall_progress: (err, message) =>
-    console.log err
+  stall_progress: (message, err, show_error_details) =>
     @progress.find('.progress-bar, .status').addClass 'error'
     @progress.find('.status').text message
+    if err
+      console.log err
+      if show_error_details
+        @progress.find('.error.details').text err.error
 
   upload_file: (file) =>
     if not file
       return alert 'Choose a file to upload!'
     @show_progress file.name, 800
     @update_progress 0.25, 'Reading from local disk..'
+    if file.type != Common.MIME_type
+      return @stall_progress "Got #{file.type} (expected #{Common.MIME_type})"
     reader = new FileReader
     reader.onload = @finish_file_read
     reader.onerror = (err) =>
-      @stall_progress err, 'There was an error reading the file.'
-    reader.readAsBinaryString file
+      @stall_progress 'There was an error reading the file.', err, false
+    reader.readAsDataURL file
 
   finish_file_read: (e) =>
     result = e.target.result
     if result.length > Common.max_size
-      return @stall_progress null,
+      return @stall_progress \
         "File was too large (maximum size: #{Common.max_size >> 20} MB)"
     @update_progress 0.50, "Sending #{result.length} bytes to server..."
-    Meteor.call 'write_file', result, @validate_upload
+    Meteor.call 'save_file', result, (err, result) =>
+      @validate_upload err, result, 0.75
 
   upload_url: (url) =>
     if not url
       return alert 'Enter a URL to upload!'
     @show_progress @parse_url(url), 400
-    @update_progress 0.25, 'Streaming remote file to server...'
-    Meteor.call 'save_url', url, @validate_upload
+    @update_progress 0.33, 'Streaming remote file to server...'
+    Meteor.call 'save_url', url, (err, result) =>
+      @validate_upload err, result, 0.67
 
-  validate_upload: (err, result) =>
+  validate_upload: (err, result, progress) =>
     if err
-      return @stall_progress err, 'There was a server-side upload error.'
-    @update_progress 0.75, 'Validating PDF...'
+      return @stall_progress 'There was a server-side upload error:', err, true
+    @update_progress progress, 'Validating PDF...'
     console.log result
 
 
