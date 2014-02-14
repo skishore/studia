@@ -23,9 +23,10 @@ class Sketchpad extends Canvas
 
   mousemove: (e) =>
     [last_cursor, @cursor] = [@cursor, @get_cursor e]
-    if (Mouse.mouse_down or Mouse.touch_enabled) and Session.get 'page_loaded'
+    if (Mouse.mouse_down or Mouse.touch_enabled) and do ready
       [hash, page] = [Session.get('hash'), Session.get('page')]
       Meteor.call 'insert_segment', hash, page, last_cursor, @cursor
+      @draw_segment last_cursor, @cursor
 
   render_page: (page) =>
     viewport = page.getViewport 1.0
