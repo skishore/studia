@@ -6,6 +6,7 @@ class Sketchpad extends Canvas
   clear_page: (viewport) =>
     toolbar_height = do @elt.parent().find('.toolbar').height
     target_height = window.innerHeight - toolbar_height - 22
+    target_height = Math.min target_height, viewport.height
     @elt.parent().height target_height + toolbar_height
     @elt.parent().width 1.0*target_height*viewport.width/viewport.height
     @page_context.canvas.height = @context.canvas.height = viewport.height
