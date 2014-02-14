@@ -59,10 +59,27 @@ refresh_page = ->
           do refresh_page
 
 
-Template.sketchpad.events
-  'click .clear-link': (e) ->
-    Meteor.call 'clear_segments'
+prev_page = ->
+  if do ready and Session.get('page') > 1
+    Session.set 'page', Session.get('page') - 1
+    Session.set 'page_loaded', false
 
+
+next_page = ->
+  if do ready and Session.get('page') < pdf?.numPages
+    Session.set 'page', Session.get('page') + 1
+    Session.set 'page_loaded', false
+
+
+$(window).keydown (e) ->
+  if do ready
+    if e.keyCode in [37, 38]
+      do prev_page
+    else if e.keyCode in [39, 40]
+      do next_page
+
+
+Template.sketchpad.events
   'mousedown .sketchpad': (e) ->
     if not Mouse.touch_enabled
       sketchpad?.mousedown e
@@ -88,15 +105,9 @@ Template.sketchpad.rendered = ->
 
 
 Template.toolbar.events =
-  'click .previous': (e) ->
-    if do ready and Session.get('page') > 1
-      Session.set 'page', Session.get('page') - 1
-      Session.set 'page_loaded', false
+  'click .previous': (e) -> do prev_page
 
-  'click .next': (e) ->
-    if do ready and Session.get('page') < pdf?.numPages
-      Session.set 'page', Session.get('page') + 1
-      Session.set 'page_loaded', false
+  'click .next': (e) -> do next_page
 
   'click .clear': (e) ->
     if do ready
