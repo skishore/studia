@@ -3,13 +3,19 @@ class Sketchpad extends Canvas
     super @elt
     @page_context = @page[0].getContext '2d'
 
-  clear_page: =>
-    @page_context.canvas.height = do @page.height
-    @page_context.canvas.width = do @page.width
+  clear_page: (viewport) =>
+    toolbar_height = 20
+    target_height = window.innerHeight - toolbar_height - 20
+    @elt.parent().height target_height + toolbar_height
+    @elt.parent().width 1.0*target_height*viewport.width/viewport.height
+    @page_context.canvas.height = @context.canvas.height = viewport.height
+    @page_context.canvas.width = @context.canvas.width = viewport.width
+    do @set_line_style
 
   get_cursor: (e) =>
     offset = do @elt.offset
-    {x: e.pageX - offset.left, y: e.pageY - offset.top}
+    x: 1.0*(e.pageX - offset.left)*@context.canvas.width/do @elt.width
+    y: 1.0*(e.pageY - offset.top)*@context.canvas.height/do @elt.height
 
   mousedown: (e) =>
     @cursor = @get_cursor e
@@ -22,10 +28,7 @@ class Sketchpad extends Canvas
 
   render_page: (page) =>
     viewport = page.getViewport 1.0
-    @elt.parent().height viewport.height
-    @elt.parent().width viewport.width
-    @clear true
-    do @clear_page
+    @clear_page viewport
     page.render canvasContext: @page_context, viewport: viewport
 
 
@@ -89,5 +92,5 @@ Meteor.startup ->
       Segments.get_page(hash, page).observe
         'added': (segment) ->
           sketchpad?.draw_line segment.start, segment.end
-        'removed': (old_segment) ->
+        'removed': (segments) ->
           do sketchpad?.clear

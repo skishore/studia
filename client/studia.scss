@@ -26,6 +26,8 @@ body {
 }
 
 .sketchpad-template {
+  $toolbar-height: 20px;
+
   .canvas-container {
     border: 1px dotted #888;
     height: 400px;
@@ -33,11 +35,21 @@ body {
     position: relative;
     width: 400px;
 
+    .toolbar {
+      background-color: #CFC;
+      position: absolute;
+      height: $toolbar-height;
+      left: 0px;
+      right: 0px;
+      top: 0px;
+    }
+
     .page, .sketchpad {
       position: absolute;
       bottom: 0px;
       left: 0px;
-      height: 100%;
+      right: 0px;
+      top: $toolbar-height;
       width: 100%;
     }
   }
