@@ -16,7 +16,8 @@ class Sketchpad extends Canvas
       Meteor.call 'insert_segment', hash, page, last_cursor, @cursor
 
 
-Session.set 'sketchpad_loaded', false
+current_hash = null
+pdf = null
 sketchpad = null
 
 
@@ -41,12 +42,32 @@ Template.sketchpad.events
       sketchpad?.mousemove e
 
 
+refresh_page = ->
+  [hash, page] = [Session.get('hash'), Session.get('page')]
+  if not hash
+    return
+  if hash == current_hash
+    pdf.getPage(page).then (result) ->
+      if hash == Session.get('hash') and page == Session.get('page')
+        window.result = result
+  else
+    Meteor.call 'get_file', hash, (err, result) ->
+      buffer = Common.base64_decode result
+      PDFJS.getDocument(buffer).then (result) ->
+        if hash == Session.get 'hash'
+          [current_hash, pdf] = [hash, result]
+          do refresh_page
+
+
 Template.sketchpad.rendered = ->
   sketchpad = new Sketchpad $ @find 'canvas'
   Session.set 'sketchpad_loaded', true
 
 
 Meteor.startup ->
+  Deps.autorun ->
+    do refresh_page
+
   Deps.autorun ->
     [hash, page] = [Session.get('hash'), Session.get('page')]
     if hash and Session.get 'sketchpad_loaded'

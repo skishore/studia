@@ -79,7 +79,6 @@ class Uploader
     PDFJS.getDocument(buffer).then((pdf) =>
       link = "#{window.location.origin}/##{uuid}"
       @finish_progress "Done! Got link: <a href=\"#{link}\">#{link}</a>"
-      window.pdf = pdf
     ).catch((err) =>
       @stall_progress 'The PDF was malformed!', err
     )
