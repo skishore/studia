@@ -27,7 +27,7 @@ body {
 
 .sketchpad-template {
   $font-family: Arial, Helvetica, sans-serif;
-  $toolbar-height: 20px;
+  $toolbar-height: 23px;
 
   .canvas-container {
     border: 1px dotted #888;
@@ -45,12 +45,41 @@ body {
       right: 0px;
       top: 0px;
 
-      .page-count, .previous, .next {
+      .page-count, .previous, .next, .clear {
         float: left;
         font-family: $font-family;
         font-size: 12px;
         display: inline-block;
+        margin: 5px 3px 5px 5px;
+        @include user-select(none);
+      }
+
+      .clear {
+        float: right;
+      }
+
+
+      .previous, .next, .clear {
+        background-color: #59F;
+        background-image: -webkit-linear-gradient(top, #59F, #5094F8);
+        border: 1px solid #37D;
+        @include border-radius(3px);
+        color: white;
+        cursor: pointer;
         margin: 3px;
+        padding: 0.5px 4px;
+
+        &:hover {
+          background-color: #5494F4;
+          background-image: -webkit-linear-gradient(top, #5494F4, #4C8FEF);
+          border-color: #15B;
+        }
+
+        &:active {
+          background-color: #4888F8;
+          background-image: -webkit-linear-gradient(top, #4888F8, #4080F0);
+          border-color: #04A;
+        }
       }
     }
 

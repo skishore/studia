@@ -6,8 +6,8 @@ Meteor.methods
   insert_segment: (hash, page, start, end) ->
     Segments.insert_segment hash, page, start, end
 
-  clear_segments: ->
-    Segments.remove {}
+  clear_segments: (hash, page) ->
+    Segments.remove {hash: hash, page: page}
 
   get_file: (uuid) ->
     FileStore.get_file uuid

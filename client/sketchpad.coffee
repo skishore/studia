@@ -81,7 +81,9 @@ Template.sketchpad.events
 
 
 Template.sketchpad.rendered = ->
-  sketchpad = new Sketchpad ($ @find '.page'), ($ @find '.sketchpad')
+  [page, elt] = [$(@find '.page'), $(@find '.sketchpad')]
+  if page[0] != sketchpad?.page[0] or elt[0] != sketchpad?.elt[0]
+    sketchpad = new Sketchpad page, elt
   Session.set 'sketchpad_loaded', true
 
 
@@ -95,6 +97,11 @@ Template.toolbar.events =
     if do ready and Session.get('page') < pdf?.numPages
       Session.set 'page', Session.get('page') + 1
       Session.set 'page_loaded', false
+
+  'click .clear': (e) ->
+    if do ready
+      [hash, page] = [Session.get('hash'), Session.get('page')]
+      Meteor.call 'clear_segments', hash, page
 
 
 Template.toolbar.page_count = ->
@@ -110,7 +117,7 @@ Meteor.startup ->
 
   Deps.autorun ->
     [hash, page] = [Session.get('hash'), Session.get('page')]
-    if hash and Session.get('page_loaded') and Session.get('sketchpad_loaded')
+    if hash and do ready
       Segments.get_page(hash, page).observe
         'added': (segment) ->
           sketchpad?.draw_line segment.start, segment.end
