@@ -18,7 +18,7 @@ class @Segments extends Collection
     @find {hash: hash}
 
   @get_page: (hash, page) =>
-    @find {hash: hash, page: page}, $sort: mts: 1
+    @find hash: hash, page: page
 
   @insert_segment: (hash, page, start, end) =>
     check hash, String
