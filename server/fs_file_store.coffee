@@ -17,8 +17,8 @@ class @FSFileStore
     length = Math.max length, 1
     min_length = "#{Common.tolerance*length}".length - 1
     while true
-      uuid = Math.floor Common.tolerance*length*Math.random()
-      if "#{uuid}".length >= min_length
+      uuid = "#{Math.floor Common.tolerance*length*Math.random()}"
+      if uuid.length >= min_length
         return uuid
 
   @generate_uuid: =>

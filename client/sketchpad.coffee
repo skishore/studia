@@ -12,7 +12,8 @@ class Sketchpad extends Canvas
   mousemove: (e) =>
     [last_cursor, @cursor] = [@cursor, @get_cursor e]
     if Mouse.mouse_down or Mouse.touch_enabled
-      Meteor.call 'insert_segment', last_cursor, @cursor
+      [hash, page] = [Session.get('hash'), Session.get('page')]
+      Meteor.call 'insert_segment', hash, page, last_cursor, @cursor
 
 
 Session.set 'sketchpad_loaded', false
@@ -46,13 +47,10 @@ Template.sketchpad.rendered = ->
 
 
 Meteor.startup ->
-  do Mouse.initialize
-
-  Meteor.subscribe 'segments'
-
   Deps.autorun ->
-    if Session.get 'sketchpad_loaded'
-      Segments.find().observe
+    [hash, page] = [Session.get('hash'), Session.get('page')]
+    if hash and Session.get 'sketchpad_loaded'
+      Segments.get_page(hash, page).observe
         'added': (segment) ->
           sketchpad?.draw_line segment.start, segment.end
         'removed': (old_segment) ->

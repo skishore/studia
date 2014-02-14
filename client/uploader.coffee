@@ -77,12 +77,11 @@ class Uploader
       return @stall_progress 'There was a server-side retrieval error:', err, true
     buffer = Common.base64_decode result
     PDFJS.getDocument(buffer).then((pdf) =>
-      link = "#{window.location.origin}/#{uuid}"
+      link = "#{window.location.origin}/##{uuid}"
       @finish_progress "Done! Got link: <a href=\"#{link}\">#{link}</a>"
       window.pdf = pdf
     ).catch((err) =>
-      console.log err
-      @stall_progress 'The PDF was malformed!'
+      @stall_progress 'The PDF was malformed!', err
     )
 
 

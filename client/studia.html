@@ -4,12 +4,16 @@
 </head>
 
 <body>
-  {{#if false}}
+  {{> main}}
+</body>
+
+<template name="main">
+  {{#if hash}}
     {{> sketchpad}}
   {{else}}
     {{> uploader}}
   {{/if}}
-</body>
+</template>
 
 <template name="sketchpad">
   <div class="sketchpad-template">

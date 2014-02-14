@@ -1,16 +1,24 @@
-Meteor.publish 'segments', ->
-  do Segments.publish
+Meteor.publish 'segments', (hash) ->
+  Segments.publish hash
 
 
 Meteor.methods
-  insert_segment: (start, end) ->
-    Segments.insert_segment start, end
+  insert_segment: (hash, page, start, end) ->
+    Segments.insert_segment hash, page, start, end
 
   clear_segments: ->
     Segments.remove {}
 
-  get_file: FileStore.get_file
+  get_file: (uuid) ->
+    FileStore.get_file uuid
 
-  save_file: FileStore.save_file
+  save_file: (data) ->
+    FileStore.save_file data
 
-  save_url: FileStore.save_url
+  save_url: (url) ->
+    FileStore.save_url url
+
+
+reset = ->
+  MongoFileStore.remove {}
+  Segments.remove {}

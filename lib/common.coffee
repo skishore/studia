@@ -12,7 +12,7 @@ else
 
 class @Common
   @dev = dev
-  @durable = not dev
+  @durable = true #not dev
 
   # The maximum allowed size, in bytes, of an uploaded file.
   @max_size = 0x1000000

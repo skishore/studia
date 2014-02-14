@@ -3,16 +3,32 @@ class @Segments extends Collection
     name: 'segments'
     durable: Common.durable
     fields: [
+      'hash',
+      'page',
       'start',
       'end',
+      'mts',
+    ]
+    indices: [
+      {columns: ['hash', 'page', 'mts']},
     ]
 
-  @publish: =>
-    @find {}
 
-  @insert_segment: (start, end) =>
-    check start.x, Number
+  @publish: (hash) =>
+    @find {hash: hash}
+
+  @get_page: (hash, page) =>
+    @find {hash: hash, page: page}, $sort: mts: 1
+
+  @insert_segment: (hash, page, start, end) =>
+    check hash, String
+    check page, Number
     check start.y, Number
     check end.x, Number
     check end.y, Number
-    @insert {start: start, end: end}
+    @insert
+      hash: hash
+      page: page
+      start: start
+      end: end
+      mts: do Date.now
