@@ -1,21 +1,18 @@
 class @Canvas
   constructor: (@elt) ->
-    container = elt.parent()
-    elt.width container.width()
-    elt.height container.height()
     @context = elt[0].getContext '2d'
     @clear true
 
   clear: (force) =>
     if @dirty or force
       # Set the context's internal width and height based on the canvas.
-      @context.canvas.height = @elt.height()
-      @context.canvas.width = @elt.width()
+      @context.canvas.height = do @elt.height
+      @context.canvas.width = do @elt.width
       # Set the line style. Modifying @context.canvas after making these
       # changes will undo them.
       @context.lineCap = 'round'
       @context.lineJoin = 'round'
-      @context.lineWidth = 4
+      @context.lineWidth = 2
       @context.strokeStyle = 'red'
       @dirty = false
 

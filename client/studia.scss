@@ -30,12 +30,16 @@ body {
     border: 1px dotted #888;
     height: 400px;
     margin: 0px auto;
+    position: relative;
     width: 400px;
-  }
 
-  .clear-button {
-    display: block;
-    margin: 4px;
+    .page, .sketchpad {
+      position: absolute;
+      bottom: 0px;
+      left: 0px;
+      height: 100%;
+      width: 100%;
+    }
   }
 }
 

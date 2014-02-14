@@ -4,6 +4,7 @@ $(window).bind 'hashchange', (e) ->
     Session.set 'hash', hash
     # pdf.js is 1-indexed =/
     Session.set 'page', 1
+    Session.set 'page_loaded', false
     Session.set 'sketchpad_loaded', false
 
 
