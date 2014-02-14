@@ -26,6 +26,7 @@ body {
 }
 
 .sketchpad-template {
+  $font-family: Arial, Helvetica, sans-serif;
   $toolbar-height: 20px;
 
   .canvas-container {
@@ -36,12 +37,21 @@ body {
     width: 400px;
 
     .toolbar {
-      background-color: #CFC;
+      background-color: #F7F7F7;
+      border: 1px solid #D7D7D7;
       position: absolute;
       height: $toolbar-height;
       left: 0px;
       right: 0px;
       top: 0px;
+
+      .page-count, .previous, .next {
+        float: left;
+        font-family: $font-family;
+        font-size: 12px;
+        display: inline-block;
+        margin: 3px;
+      }
     }
 
     .page, .sketchpad {
@@ -49,7 +59,7 @@ body {
       bottom: 0px;
       left: 0px;
       right: 0px;
-      top: $toolbar-height;
+      top: $toolbar-height + 2px;
       width: 100%;
     }
   }

@@ -18,10 +18,24 @@
 <template name="sketchpad">
   <div class="sketchpad-template">
     <div class="canvas-container">
-      <div class="toolbar"></div>
+      {{> toolbar}}
       <canvas class="page"></canvas>
       <canvas class="sketchpad"></canvas>
     </div>
+  </div>
+</template>
+
+<template name="toolbar">
+  <div class="toolbar-template toolbar">
+    {{#if ready}}
+      <div class="page-count">
+        {{page_count}}
+      </div>
+      <div class="previous">Previous</div>
+      <div class="next">Next</div>
+    {{else}}
+      <div class="page-count">Rendering...</div>
+    {{/if}}
   </div>
 </template>
 

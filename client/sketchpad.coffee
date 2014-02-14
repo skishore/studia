@@ -4,8 +4,8 @@ class Sketchpad extends Canvas
     @page_context = @page[0].getContext '2d'
 
   clear_page: (viewport) =>
-    toolbar_height = 20
-    target_height = window.innerHeight - toolbar_height - 20
+    toolbar_height = do @elt.parent().find('.toolbar').height
+    target_height = window.innerHeight - toolbar_height - 22
     @elt.parent().height target_height + toolbar_height
     @elt.parent().width 1.0*target_height*viewport.width/viewport.height
     @page_context.canvas.height = @context.canvas.height = viewport.height
@@ -37,25 +37,7 @@ pdf = null
 sketchpad = null
 
 
-Template.sketchpad.events
-  'click .clear-link': (e) ->
-    Meteor.call 'clear_segments'
-
-  'mousedown .sketchpad': (e) ->
-    if not Mouse.touch_enabled
-      sketchpad?.mousedown e
-
-  'mousemove .sketchpad': (e) ->
-    if not Mouse.touch_enabled
-      sketchpad?.mousemove e
-
-  'touchstart .sketchpad': (e) ->
-    if Mouse.touch_enabled
-      sketchpad?.mousedown e
-
-  'touchmove .sketchpad': (e) ->
-    if Mouse.touch_enabled
-      sketchpad?.mousemove e
+ready = -> Session.get('page_loaded') and Session.get('sketchpad_loaded')
 
 
 refresh_page = ->
@@ -77,9 +59,49 @@ refresh_page = ->
           do refresh_page
 
 
+Template.sketchpad.events
+  'click .clear-link': (e) ->
+    Meteor.call 'clear_segments'
+
+  'mousedown .sketchpad': (e) ->
+    if not Mouse.touch_enabled
+      sketchpad?.mousedown e
+
+  'mousemove .sketchpad': (e) ->
+    if not Mouse.touch_enabled
+      sketchpad?.mousemove e
+
+  'touchstart .sketchpad': (e) ->
+    if Mouse.touch_enabled
+      sketchpad?.mousedown e
+
+  'touchmove .sketchpad': (e) ->
+    if Mouse.touch_enabled
+      sketchpad?.mousemove e
+
+
 Template.sketchpad.rendered = ->
   sketchpad = new Sketchpad ($ @find '.page'), ($ @find '.sketchpad')
   Session.set 'sketchpad_loaded', true
+
+
+Template.toolbar.events =
+  'click .previous': (e) ->
+    if do ready and Session.get('page') > 1
+      Session.set 'page', Session.get('page') - 1
+      Session.set 'page_loaded', false
+
+  'click .next': (e) ->
+    if do ready and Session.get('page') < pdf?.numPages
+      Session.set 'page', Session.get('page') + 1
+      Session.set 'page_loaded', false
+
+
+Template.toolbar.page_count = ->
+  return "#{Session.get('page')}/#{pdf?.numPages}"
+
+
+Template.toolbar.ready = ready
 
 
 Meteor.startup ->
